@@ -32,4 +32,4 @@ def to_controller():
 if __name__ == "__main__":
     logger.init_log()
     # 将host设置为0.0.0.0，则外网用户也可以访问到这个服务
-    app.run(host=ConfigInit().get_config_by_option('service_ip'), port=8080, debug=True)
+    app.run(host=ConfigInit().get_config_by_option('service_ip'), port=1080, debug=True)

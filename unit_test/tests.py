@@ -1,6 +1,4 @@
-#!/usr/bin/python
-# coding=utf8
-# Copyright 2017 SARRS Inc. All Rights Reserved.
+# -*- coding:utf-8 -*-
 
 # @Time    : 2018/10/23 19:32
 # @Author  : zengyang@tv365.net(ZengYang)
@@ -10,7 +8,7 @@
 import traceback
 import unittest
 
-from src.worker.stream_worker import VikiParser, get_and_download_stream_info
+from src.worker.stream_worker import VikiParser
 
 
 class Stream_Worker_Test(unittest.TestCase):

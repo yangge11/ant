@@ -22,11 +22,10 @@ def hash_md5(content):
 
 
 def get_hash_sign(file_name):
-    save_path = ConfigInit().get_config_by_option('download_path')
-    return hash_md5(save_path + file_name)
+    return hash_md5(file_name)
 
 
 if __name__ == '__main__':
-    a1 = hash_md5('https://content.viki.io/1138126v/dash/1138126v_dash_high_480p_dce91c_1809251045_track1_dashinit.mp4')
+    a1 = hash_md5('1542772040')
     a2 = hash_md5('https://content.viki.io/1138126v/dash/1138126v_dash_high_480p_dce91c_1809251045_track2_dashinit.mp4')
     pass

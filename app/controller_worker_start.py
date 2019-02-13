@@ -20,7 +20,7 @@ from src.worker.controler_worker import Controller
 def run():
     task_queue = RedisMsgQueue()
     task_queue.addQueue(consts.constant_manager.CONTROLLER_QUEUE_NAME, 20480)
-    controller_worker = Controller(consts.constant_manager.CONTROLLER_QUEUE_NAME, task_queue, 10)
+    controller_worker = Controller(consts.constant_manager.CONTROLLER_QUEUE_NAME, task_queue, 1)
     controller_worker.start()
 
     while True:

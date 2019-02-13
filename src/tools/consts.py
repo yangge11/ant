@@ -83,7 +83,7 @@ constant_manager.CONTROLLER_QUEUE_NAME = 'controller_queue'  # list
 constant_manager.DOWNLOAD_QUEUE_NAME = 'download_queue'  # list
 constant_manager.DOWNLOAD_STATUS_QUEUE_NAME = 'download_status_queue'  # set
 constant_manager.DB_SAVE_QUEUE_NAME = 'db_save_queue'  # list
-constant_manager.FILE_MERGE_QUEUE_NAME = 'fiel_merge_queue'  # list
+constant_manager.FILE_MERGE_QUEUE_NAME = 'file_merge_queue'  # list
 
 # single_stream_file_json
 # media_detail_type
@@ -99,7 +99,43 @@ constant_manager.SUBTITLE = 'subtitle'
 constant_manager.NOT_DOWNLOAD_OVER = 0
 constant_manager.DOWNLOAD_OVER = 1
 constant_manager.DOWNLOADING = 2
+constant_manager.DOWNLOAD_PAUSE = 3
+
 # download_type
 constant_manager.RE_DOWNLOAD = 'wb+'
 constant_manager.CONTINUE_DOWNLOAD = 'ab+'
+# count download_speed by refresh_count
+constant_manager.DOWNLOAD_SPEED_REFRESH_COUNT = 100
 
+LANGUAGE_CODES = {
+    "Arabic": "ar",
+    "Chinese": "zh",
+    "Danish": "da",
+    "Dutch": "nl",
+    "English": "en",
+    "Esperanto": "eo",  # Yes, I included Esperanto... just in case.
+    "Finnish": "fi",
+    "French": "fr",
+    "German": "de",
+    "Greek": "el",
+    "Hebrew": "he",
+    "Hindi": "hi",
+    "Irish": "ga",
+    "Italian": "it",
+    "Japanese": "ja",
+    "Korean": "ko",
+    "Mongolian": "mn",
+    "Norwegian": "no",
+    "Persian": "fa",
+    "Polish": "pl",
+    "Portuguese": "pt",
+    "Russian": "ru",
+    "Spanish": "es",
+    "Swedish": "sv",
+    "Thai": "th",
+    "Urdu": "ur",
+    "Vietnamese": "vi",
+    "Welsh": "cy",
+    "Yiddish": "yi",
+    "Zulu": "zu"
+}

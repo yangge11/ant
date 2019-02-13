@@ -8,6 +8,7 @@
 # @Software: PyCharm
 # @ToUse  :
 import logging
+import traceback
 
 import requests
 
@@ -19,10 +20,14 @@ from src.tools.queue_manager import RedisMsgQueue
 
 
 def scheduler_controller_queue(url):
-    task_queue = RedisMsgQueue()
-    task_queue.addQueue(consts.constant_manager.CONTROLLER_QUEUE_NAME, 1)
-    task_queue.push(consts.constant_manager.CONTROLLER_QUEUE_NAME, url)
-    logging.debug('push task url %s' % url)
+    try:
+        task_queue = RedisMsgQueue()
+        task_queue.addQueue(consts.constant_manager.CONTROLLER_QUEUE_NAME, 1)
+        task_queue.push(consts.constant_manager.CONTROLLER_QUEUE_NAME, url)
+        logging.debug('push task url %s' % url)
+    except:
+        traceback.print_exc()
+        logging.error('push task error')
 
 
 def scheduler_db_save_queue(download_media_json):
@@ -39,9 +44,8 @@ def scheduler_db_save_queue(download_media_json):
 def scheduler_download_status_queue(download_file_status_json):
     redis_queue = RedisMsgQueue()
     redis_queue.addQueue(consts.constant_manager.DOWNLOAD_STATUS_QUEUE_NAME, 1)
-    redis_queue.set_add(consts.constant_manager.DOWNLOAD_STATUS_QUEUE_NAME,
-                        from_json_to_string(download_file_status_json))
-    logging.debug('push download_file_status hash_sign %s' % download_file_status_json['hash_sign'])
+    redis_queue.hash_set(consts.constant_manager.DOWNLOAD_STATUS_QUEUE_NAME, download_file_status_json['hash_sign'],
+                         from_json_to_string(download_file_status_json))
     pass
 
 
@@ -51,14 +55,15 @@ def scheduler_download_queue(download_file_json, priority=False):
     if priority:
         redis_queue.l_push(consts.constant_manager.DOWNLOAD_QUEUE_NAME, from_json_to_string(download_file_json))
     else:
-        redis_queue.push(consts.constant_manager.DOWNLOAD_QUEUE_NAME, from_json_to_string(download_file_json))
+        # todo:下载任务细粒度管理
+        redis_queue.push('demo', from_json_to_string(download_file_json))
     logging.debug('push download_file download_url %s' % download_file_json['download_url'])
     pass
 
 
 def scheduler_remote_service(urls):
     remote_ip = ConfigInit().get_config_by_option('remote_ip')
-    urls_to_remote = ['http://%s:8080/to_controller?url=%s' % (remote_ip, url) for url in urls]
+    urls_to_remote = ['http://%s:1080/to_controller?url=%s' % (remote_ip, url) for url in urls]
     for url_to_remote in urls_to_remote:
         response = requests.get(url_to_remote)
         logging.debug(response.text)
@@ -66,7 +71,8 @@ def scheduler_remote_service(urls):
 
 
 def main():
-    scheduler_remote_service()
+    urls = ['https://www.viki.com/videos/1085555v-air-city-episode-14-episode-14']
+    scheduler_remote_service(urls)
     pass
 
 

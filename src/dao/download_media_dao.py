@@ -28,7 +28,7 @@ def save(download_media):
         download_media.id = result['id']
         update(download_media)
     else:
-        insert(download_media)
+        download_media.id = insert(download_media)
     return download_media.id
 
 
@@ -59,10 +59,73 @@ def select_by_hash_sign(hash_sign):
 
 def select_to_merge():
     sql = """
-    select * from download_media where merged_sign in 
-    (select merged_sign from crawler_online.download_media where merged_status!=1 and merged_sign!='' and media_type!="%s"
-    group by merged_sign having count(merged_sign)>1)
-    order by merged_sign ,merged_order;
-    """ % consts.constant_manager.MERGED
+    select * from crawler_online.download_media where merged_order not in (0,-1) and download_status=1 
+    and merged_status is null and download_path!='/data/dev_ant/';
+    """
     client = ConfigInit().get_conn()
     return client.getAll(sql)
+
+
+def select_original_url_downloaded_subtitle(urls_list):
+    sql = """
+    select distinct original_url from download_media
+    where 
+    media_type='subtitle' and download_status=1
+    and original_url in (%s);
+    """ % ', '.join(map(lambda x: "'%s'" % x, urls_list))
+    client = ConfigInit().get_conn()
+    urls_tuple = client.getAll(sql)
+    return [url_dict['original_url'] for url_dict in urls_tuple] if urls_tuple else []
+
+
+def select_original_url_downloaded_video_audio(urls_list):
+    sql = """
+    select original_url from crawler_online.download_media
+    where 
+    (media_type='video' or media_type='audio' ) and download_status=1 and original_url in (%s)
+    group by original_url having count(original_url)>1;""" % ', '.join(map(lambda x: "'%s'" % x, urls_list))
+    client = ConfigInit().get_conn()
+    urls_tuple = client.getAll(sql)
+    return [url_dict['original_url'] for url_dict in urls_tuple] if urls_tuple else []
+
+
+def select_original_url_downloaded_merged_media(urls_list):
+    sql = """
+    select original_url from crawler_online.download_media
+    where media_type='merged' and file_type='mp4' and download_status=1 and original_url in (%s)
+    ;""" % ', '.join(map(lambda x: "'%s'" % x, urls_list))
+    client = ConfigInit().get_conn()
+    urls_tuple = client.getAll(sql)
+    return [url_dict['original_url'] for url_dict in urls_tuple] if urls_tuple else []
+
+
+def select_tmp():
+    sql = """
+    select id,original_url,absolute_path,download_url,media_type,language,file_type 
+    from crawler_online.download_media
+    """
+    client = ConfigInit().get_conn()
+    all_tuple = client.getAll(sql)
+    return all_tuple
+
+
+def select_scp_file():
+    sql = """
+    SELECT absolute_path FROM crawler_online.download_media where download_status=1
+    """
+    client = ConfigInit().get_conn()
+    all_tuple = client.getAll(sql)
+    return [url_dict['absolute_path'] for url_dict in all_tuple] if all_tuple else []
+
+
+def select_not_download_over_file():
+    sql = """
+    SELECT absolute_path FROM crawler_online.download_media where download_status!=1;
+    """
+    client = ConfigInit().get_conn()
+    all_tuple = client.getAll(sql)
+    return [url_dict['absolute_path'] for url_dict in all_tuple] if all_tuple else []
+
+
+def del_wrong_db_data():
+    pass

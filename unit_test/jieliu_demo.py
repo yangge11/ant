@@ -8,9 +8,7 @@ from contextlib import closing
 
 import requests
 
-from src.config import consts
 from src.entity.medias import from_string_to_json
-from src.tools.ProgressBar import ProgressBar
 
 sys.path.append('../../')
 import traceback
@@ -18,8 +16,6 @@ import traceback
 import time
 
 from ffmpy import FFmpeg
-
-
 
 from selenium.common.exceptions import TimeoutException
 from selenium import webdriver
@@ -151,8 +147,9 @@ def downloadVideo(url, file_name=''):
 
 
 def merge_sv_demo():
-    ff = FFmpeg(inputs={'/Users/tv365/test_video.mp4': '', '/Users/tv365/test_audio.mp4': ''},
-                outputs={'/Users/tv365/test_merge.mp4': '-c copy'})
+    ff = FFmpeg(inputs={'/data/dev_ant/1101534v_high_480p_1604290955_track1_dashinit.mp4': '',
+                        '/data/dev_ant/1101534v_high_480p_1604290955_track2_dashinit.mp4': ''},
+                outputs={'/data/dev_ant/test_merge.mp4': '-c copy'})
     print(ff.cmd)
     ff.run()
     pass
@@ -161,7 +158,8 @@ def merge_sv_demo():
 def main():
     'https://www.viki.com/videos/1138126v-all-out-of-love-episode-3'
     # phantomjs_url_test('https://www.baidu.com')
-    chrome_test('https://www.viki.com/videos/1138126v-all-out-of-love-episode-3')
+    # chrome_test('https://www.viki.com/videos/1138126v-all-out-of-love-episode-3')
+    merge_sv_demo()
     pass
 
 

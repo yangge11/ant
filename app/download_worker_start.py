@@ -8,36 +8,33 @@
 # @Software: PyCharm
 # @ToUse  :
 import logging
-
 import time
 from optparse import OptionParser
+import sys
 
+sys.path.append('../')
 from src.tools import consts, logger
 from src.tools.queue_manager import RedisMsgQueue
 from src.worker.download_worker import Downloader
 
 
-def run():
+def run(queue_name):
     task_queue = RedisMsgQueue()
-    task_queue.addQueue(consts.constant_manager.DOWNLOAD_QUEUE_NAME, 20480)
-    downloader_worker = Downloader(consts.constant_manager.DOWNLOAD_QUEUE_NAME, task_queue, 3)
+    task_queue.addQueue(queue_name, 20480)
+    downloader_worker = Downloader(queue_name, task_queue, 10)
     downloader_worker.start()
 
     while True:
-        logging.info("=================> queue_size: %d", task_queue.size(consts.constant_manager.DOWNLOAD_QUEUE_NAME))
+        logging.info("queue_name %s==========> queue_size: %d" % (queue_name, task_queue.size(queue_name)))
         time.sleep(10)
 
 
 if __name__ == "__main__":
     logger.init_log()
     opt = OptionParser()
-    opt.add_option('--redis_ip',
-                   dest='redis_ip',
+    opt.add_option('--queue_name',
+                   dest='queue_name',
                    type=str,
-                   help='the ip of the redis server')
-    opt.add_option('--redis_port',
-                   dest='redis_port',
-                   type=int,
-                   help='the port of the check host')
+                   help='the queue_name')
     (options, args) = opt.parse_args()
-    run()
+    run(options.queue_name)

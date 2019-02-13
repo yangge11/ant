@@ -70,7 +70,6 @@ class LocalMsgQueue(MsgQueue):
 
 
 class RedisMsgQueue(MsgQueue):
-    # todo:池的方式管理redis连接
     def __init__(self, host=ConfigInit().get_config_by_option('redis_ip'), port=6379):
         self.__db = None
         self.init(host, port)
@@ -110,3 +109,15 @@ class RedisMsgQueue(MsgQueue):
 
     def size(self, key):
         return self.__db.llen(key)
+
+    def hash_set(self, queue_name, key, value):
+        return self.__db.hset(queue_name, key, value)
+
+    def hash_get(self, queue_name, key):
+        return self.__db.hget(queue_name, key)
+
+    def hash_del(self, queue_name, keys_tuple):
+        return self.__db.hdel(queue_name, keys_tuple)
+
+    def hash_get_all(self, queue_name):
+        return self.__db.hgetall(queue_name)

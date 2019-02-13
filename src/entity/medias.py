@@ -14,12 +14,12 @@ from src.tools import consts
 
 
 def from_string_to_json(content):
+    json_dict = {}
     try:
         json_dict = json.loads(content)
         json_dict = normalize_dict(json_dict)
     except Exception as e:
         traceback.print_exc()
-        pass
     return json_dict
 
 
@@ -103,7 +103,7 @@ class DownloadFile(DownloadMedia):
     由下载器管理的核心对象
     """
     download_url = ''
-    total_size = ''
+    total_size = 0
     absolute_path = ''
     file_type = ''
     download_status = ''
@@ -115,10 +115,11 @@ class DownloadFile(DownloadMedia):
     file_name = ''
     original_url = ''
     download_type = ''
+    now_size = 0
 
-    def __init__(self, download_url='', total_size='', absolute_path='', file_type='', download_status='',
+    def __init__(self, download_url='', total_size=0, absolute_path='', file_type='', download_status='',
                  merged_sign='', merged_order=0, merged_status='', download_path='', site='',
-                 file_name='', original_url='', download_type=consts.constant_manager.CONTINUE_DOWNLOAD):
+                 file_name='', original_url='', download_type=consts.constant_manager.CONTINUE_DOWNLOAD, now_size=0):
         self.download_url = download_url
         self.total_size = total_size
         self.absolute_path = absolute_path
@@ -132,6 +133,7 @@ class DownloadFile(DownloadMedia):
         self.file_name = file_name
         self.original_url = original_url
         self.download_type = download_type
+        self.now_size = now_size
 
 
 single_stream_file_json = {
@@ -144,11 +146,13 @@ single_stream_file_json = {
     'merged_order': 0,
 }
 
-download_file_status = {
+tmp_download_file_status_json = {
     'hash_sign': '',
+    'absolute_path': '',
     'total_size': 0,
     'now_size': 0,
-    'download_speed': 0
+    'download_speed': 0,
+    'status': consts.constant_manager.DOWNLOADING,  # 下载中，暂停中
 }
 
 

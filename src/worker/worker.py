@@ -42,13 +42,13 @@ class Worker(object):
             except Empty as e:
                 logging.info('no task in queue: %s, stop(%s), sleep 10s', self._input_queue_name, str(self._stop))
                 time.sleep(10)
-            except Exception as e:
+            except:
                 traceback.print_exc()
                 logging.error('error to check in  %s' % download_obj_str)
                 time.sleep(5)
-            logging.info(
-                str("run %s %s %s" % (thread_name, self._task_queue.size(self._input_queue_name), download_obj_str)))
-        logging.info("spider thread finish")
+            logging.info(str("run %s %s %s" % (
+                thread_name, self._task_queue.size(self._input_queue_name), download_obj_str)))
+        logging.info("thread finish")
 
     def __init__(self, input_queue_name, task_queue, thread_num=10):
         self._task_queue = task_queue
@@ -59,7 +59,7 @@ class Worker(object):
         self._thread_pool = threadpool.ThreadPool(self._thread_num)
         args = []
         for i in range(0, self._thread_num):
-            args.append(str("download_worker_%s_%d" % (self._input_queue_name, i)))
+            args.append(str("worker_%s_%d" % (self._input_queue_name, i)))
         request_list = threadpool.makeRequests(self.run, args)
         for request in request_list:
             self._thread_pool.putRequest(request)
